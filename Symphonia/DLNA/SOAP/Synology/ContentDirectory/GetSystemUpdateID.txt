@@ -1,0 +1,13 @@
+﻿POST /ContentDirectory/control HTTP/1.1
+Host: 192.168.2.180:50001
+SOAPAction: "urn:schemas-upnp-org:service:ContentDirectory:1#GetSystemUpdateID"
+Content-Type: text/xml; charset="utf-8"
+Content-Length: 300
+
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+   <s:Body>
+      <u:GetSystemUpdateID xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">
+      </u:GetSystemUpdateID>
+   </s:Body>
+</s:Envelope>

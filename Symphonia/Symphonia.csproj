@@ -110,5 +110,17 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DLNA\SOAP\Synology\ContentDirectory\Browse.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DLNA\SOAP\Synology\ContentDirectory\GetSearchCapabilities.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DLNA\SOAP\Synology\ContentDirectory\GetSortCapabilities.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DLNA\SOAP\Synology\ContentDirectory\GetSystemUpdateID.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
