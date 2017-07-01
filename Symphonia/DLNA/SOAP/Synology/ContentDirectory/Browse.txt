@@ -8,12 +8,12 @@ Content-Length: 524
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
    <s:Body>
       <u:Browse xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">
-         <ObjectID>string</ObjectID>
-         <BrowseFlag>string</BrowseFlag>
-         <Filter>string</Filter>
-         <StartingIndex>ui4</StartingIndex>
-         <RequestedCount>ui4</RequestedCount>
-         <SortCriteria>string</SortCriteria>
+         <ObjectID>$ObjectID$</ObjectID>
+         <BrowseFlag>$BrowseFlag$</BrowseFlag>
+         <Filter>$Filter$</Filter>
+         <StartingIndex>$StartingIndex$</StartingIndex>
+         <RequestedCount>$RequestedCount$</RequestedCount>
+         <SortCriteria>$SortCriteria$</SortCriteria>
       </u:Browse>
    </s:Body>
 </s:Envelope>

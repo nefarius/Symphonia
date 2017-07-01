@@ -40,6 +40,9 @@
     <Reference Include="Antlr4.StringTemplate, Version=4.0.7.0, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\StringTemplate4.4.0.8\lib\net35-client\Antlr4.StringTemplate.dll</HintPath>
     </Reference>
+    <Reference Include="LiteDB, Version=3.1.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiteDB.3.1.1\lib\net35\LiteDB.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -111,16 +114,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="DLNA\SOAP\Synology\ContentDirectory\Browse.txt" />
+    <EmbeddedResource Include="DLNA\SOAP\Synology\ContentDirectory\Browse.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="DLNA\SOAP\Synology\ContentDirectory\GetSearchCapabilities.txt" />
+    <EmbeddedResource Include="DLNA\SOAP\Synology\ContentDirectory\GetSearchCapabilities.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="DLNA\SOAP\Synology\ContentDirectory\GetSortCapabilities.txt" />
+    <EmbeddedResource Include="DLNA\SOAP\Synology\ContentDirectory\GetSortCapabilities.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="DLNA\SOAP\Synology\ContentDirectory\GetSystemUpdateID.txt" />
+    <EmbeddedResource Include="DLNA\SOAP\Synology\ContentDirectory\GetSystemUpdateID.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
