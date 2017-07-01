@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Antlr4.StringTemplate;
 using Symphonia.Properties;
 
@@ -23,9 +25,23 @@ namespace Symphonia
                 var result = reader.ReadToEnd();
 
                 var st = new Template(result, Settings.Default.TemplateStartCharacter, Settings.Default.TemplateStopCharacter);
+                
+                st.Add("ObjectID", 23);
+                st.Add("BrowseFlag", "BrowseDirectChildren");
                 st.Add("Filter", "*");
+                st.Add("StartingIndex", 0);
+                st.Add("RequestedCount", "1000");
 
                 var t = st.Render();
+
+                var sa = SoapAction.FromTemplate(t);
+
+                var url = new Uri("http://192.168.2.180:50001/ContentDirectory/control");
+
+                using (var sc = new SoapClient())
+                {
+                    var ret = sc.InvokeSoapAction(url, sa.Action, sa.Body);
+                }
             }
         }
     }

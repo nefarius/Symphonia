@@ -40,5 +40,14 @@ namespace Symphonia.Properties {
                 return ((char)(this["TemplateStopCharacter"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("User-Agent: UPnP/1.0 DLNADOC/1.50 Platinum/1.0.4.2-bb / Symphonia")]
+        public string UserAgent {
+            get {
+                return ((string)(this["UserAgent"]));
+            }
+        }
     }
 }

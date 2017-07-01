@@ -73,6 +73,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SoapAction.cs" />
+    <Compile Include="SoapClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="XDocumentExtensions.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
