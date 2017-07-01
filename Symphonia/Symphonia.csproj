@@ -73,10 +73,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DLNA\SOAP\Synology\ContentDirectory\Browse\BrowseResponseResult.cs" />
+    <Compile Include="DLNA\SOAP\Synology\ContentDirectory\Browse\SoapSerialization.cs" />
+    <Compile Include="DLNA\SOAP\Synology\ContentDirectory\Browse\SoapActionBrowseResult.cs" />
     <Compile Include="SoapAction.cs" />
-    <Compile Include="SoapClient.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="SoapActionResponse.cs" />
+    <Compile Include="SoapClient.cs" />
     <Compile Include="XDocumentExtensions.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
