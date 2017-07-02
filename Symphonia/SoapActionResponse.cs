@@ -5,19 +5,22 @@ namespace Symphonia
 {
     public class SoapActionResponse<T>
     {
-        public string Response { get; }
-
         public SoapActionResponse(string response)
         {
             Response = response;
         }
 
-        public T Deserialize()
+        public string Response { get; }
+
+        public T DeserializedResponse
         {
-            var xs = new XmlSerializer(typeof(T));
-            using (var rdr = new StringReader(Response))
+            get
             {
-                return (T)xs.Deserialize(rdr);
+                var xs = new XmlSerializer(typeof(T));
+                using (var rdr = new StringReader(Response))
+                {
+                    return (T) xs.Deserialize(rdr);
+                }
             }
         }
     }

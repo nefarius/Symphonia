@@ -11,5 +11,14 @@
     <Setting Name="UserAgent" Type="System.String" Scope="Application">
       <Value Profile="(Default)">User-Agent: UPnP/1.0 DLNADOC/1.50 Platinum/1.0.4.2-bb / Symphonia</Value>
     </Setting>
+    <Setting Name="Usn" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">uuid:0011321c-387c-0011-7c38-7c381c321100::urn:schemas-upnp-org:device:MediaServer:1</Value>
+    </Setting>
+    <Setting Name="MediaServer" Type="System.Uri" Scope="Application">
+      <Value Profile="(Default)">http://192.168.2.180:50001</Value>
+    </Setting>
+    <Setting Name="BatchSize" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
