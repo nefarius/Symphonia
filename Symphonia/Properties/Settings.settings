@@ -20,5 +20,8 @@
     <Setting Name="BatchSize" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">500</Value>
     </Setting>
+    <Setting Name="DatabaseName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">MusicCollection.db</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:Symphonia"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Symphonia" Height="340" Width="620"
-                      Loaded="MainWindow_OnLoaded">
+        Title="Symphonia" Height="340" Width="620">
     <Grid>
         <Canvas>
             <TextBox x:Name="SearchQuery" Height="27" Canvas.Left="114" TextWrapping="Wrap" Canvas.Top="58" Width="203"/>
             <Button Content="Search" Canvas.Left="322" Canvas.Top="58" Width="75" Click="Button_Click"/>
             <TextBox x:Name="SearchResult" Height="144" Canvas.Left="115" TextWrapping="Wrap" Canvas.Top="90" Width="282"/>
+            <Button Content="Update" Canvas.Left="10" Canvas.Top="10" Width="75" Click="UpdateButton"/>
 
         </Canvas>
     </Grid>

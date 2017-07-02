@@ -58,63 +58,58 @@ namespace Symphonia
                         index += response.Body.BrowseResponse.NumberReturned;
 
                         pdc.SetProgress(index);
-                        pdc.SetMessage($"Downloading content information ({((int)(index * 100/pdc.Maximum))}%)");
+                        pdc.SetMessage($"Downloading content information ({(int) (index * 100 / pdc.Maximum)}%)");
 
                         var list = response.Body.BrowseResponse.DeserializedResult;
 
-                        using (var db = new LiteDatabase(@"MyData.db"))
+                        using (var db = new LiteDatabase(Settings.Default.DatabaseName))
                         {
                             var items = db.GetCollection<Item>();
 
                             items.Upsert(list.Item);
 
-                            items.EnsureIndex(i => i.Album);
-                            items.EnsureIndex(i => i.Author);
-                            items.EnsureIndex(i => i.Creator);
-                            items.EnsureIndex(i => i.Artist);
-                            items.EnsureIndex(i => i.Title);
-                            items.EnsureIndex(i => i.Genre);
+                            BsonMapper.Global.Entity<Item>().Index<Item>(
+                                "FullTextIndex",
+                                item =>
+                                    $"{item.Album?.ToLower()} " +
+                                    $"{item.Author?.ToLower()} " +
+                                    $"{item.Creator?.ToLower()} " +
+                                    $"{item.Artist?.ToLower()} " +
+                                    $"{item.Title?.ToLower()} " +
+                                    $"{item.Genre?.ToLower()}");
                         }
                     } while (true);
                 }
+
+                pdc.CloseAsync();
             }
-        }
-
-        private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var controller = await this.ShowProgressAsync("Updating Database...", "Downloading content information");
-            controller.CloseAsync();
-
-            await Task.Factory.StartNew((dynamic data) => UpdateDatabase(data.Controller),
-                new { Controller = controller });
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var query = SearchQuery.Text;
+            var query = SearchQuery.Text.ToLower();
 
-            using (var db = new LiteDatabase(@"MyData.db"))
+            using (var db = new LiteDatabase(Settings.Default.DatabaseName))
             {
                 var items = db.GetCollection<Item>();
 
-                try
-                {
-                    var result = items.Find(
-                        i => i.Album.Contains(query)
-                        || i.Author.Contains(query)
-                        || i.Title.Contains(query));
+                var result = items.Find(Query.Contains("FullTextIndex", query));
 
-                    var sb = new StringBuilder();
+                var sb = new StringBuilder();
 
-                    foreach (var item in result)
-                    {
-                        sb.AppendLine(item.Title);
-                    }
+                foreach (var item in result)
+                    sb.AppendLine(item.Title);
 
-                    SearchResult.Text = sb.ToString();
-                }
-                catch { return;}
+                SearchResult.Text = sb.ToString();
             }
+        }
+
+        private async void UpdateButton(object sender, RoutedEventArgs e)
+        {
+            var controller = await this.ShowProgressAsync("Updating Database...", "Downloading content information");
+
+            await Task.Factory.StartNew((dynamic data) => UpdateDatabase(data.Controller),
+                new {Controller = controller});
         }
     }
 }
