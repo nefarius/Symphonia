@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Antlr4.StringTemplate;
@@ -16,6 +17,8 @@ namespace Symphonia
     /// </summary>
     public partial class MainWindow
     {
+        private static readonly ReaderWriterLockSlim DbLock = new ReaderWriterLockSlim();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -60,24 +63,35 @@ namespace Symphonia
                         pdc.SetProgress(index);
                         pdc.SetMessage($"Downloading content information ({(int) (index * 100 / pdc.Maximum)}%)");
 
-                        var list = response.Body.BrowseResponse.DeserializedResult;
+                        Task.Factory.StartNew((dynamic data) =>
+                            {
+                                DbLock.EnterWriteLock();
 
-                        using (var db = new LiteDatabase(Settings.Default.DatabaseName))
-                        {
-                            var items = db.GetCollection<Item>();
+                                try
+                                {
+                                    using (var db = new LiteDatabase(Settings.Default.DatabaseName))
+                                    {
+                                        var items = db.GetCollection<Item>();
 
-                            items.Upsert(list.Item);
+                                        items.Upsert(data.Result.Item);
 
-                            BsonMapper.Global.Entity<Item>().Index<Item>(
-                                "FullTextIndex",
-                                item =>
-                                    $"{item.Album?.ToLower()} " +
-                                    $"{item.Author?.ToLower()} " +
-                                    $"{item.Creator?.ToLower()} " +
-                                    $"{item.Artist?.ToLower()} " +
-                                    $"{item.Title?.ToLower()} " +
-                                    $"{item.Genre?.ToLower()}");
-                        }
+                                        BsonMapper.Global.Entity<Item>().Index<Item>(
+                                            "FullTextIndex",
+                                            item =>
+                                                $"{item.Album?.ToLower()} " +
+                                                $"{item.Author?.ToLower()} " +
+                                                $"{item.Creator?.ToLower()} " +
+                                                $"{item.Artist?.ToLower()} " +
+                                                $"{item.Title?.ToLower()} " +
+                                                $"{item.Genre?.ToLower()}");
+                                    }
+                                }
+                                finally
+                                {
+                                    DbLock.ExitWriteLock();
+                                }
+                            },
+                            new {Result = response.Body.BrowseResponse.DeserializedResult});
                     } while (true);
                 }
 
