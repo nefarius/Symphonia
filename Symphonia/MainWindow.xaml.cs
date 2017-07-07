@@ -18,11 +18,47 @@ namespace Symphonia
     public partial class MainWindow
     {
         private static readonly ReaderWriterLockSlim DbLock = new ReaderWriterLockSlim();
+        private static readonly LiteDatabase ContentDb = new LiteDatabase(Settings.Default.DatabaseName);
 
         public MainWindow()
         {
             InitializeComponent();
+
+            ViewModel.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName.Equals("SearchQuery"))
+                    Task.Run(() =>
+                    {
+                        var query = ViewModel.SearchQuery.ToLower();
+
+                        try
+                        {
+                            if (!DbLock.TryEnterReadLock(10)) return;
+
+                            var items = ContentDb.GetCollection<Item>();
+
+                            var result = items.Find(Query.Contains("FullTextIndex", query));
+
+                            var sb = new StringBuilder();
+
+                            foreach (var item in result)
+                                sb.AppendLine($"{item.Author} - {item.Title}");
+
+                            ViewModel.SearchResult = sb.ToString();
+                        }
+                        catch
+                        {
+                            ViewModel.SearchResult = string.Empty;
+                        }
+                        finally
+                        {
+                            DbLock.ExitReadLock();
+                        }
+                    });
+            };
         }
+
+        private MainViewModel ViewModel => (MainViewModel) Resources["MainViewModel"];
 
         private static void UpdateDatabase(ProgressDialogController pdc)
         {
@@ -69,22 +105,19 @@ namespace Symphonia
 
                                 try
                                 {
-                                    using (var db = new LiteDatabase(Settings.Default.DatabaseName))
-                                    {
-                                        var items = db.GetCollection<Item>();
+                                    var items = ContentDb.GetCollection<Item>();
 
-                                        items.Upsert(data.Result.Item);
+                                    items.Upsert(data.Result.Item);
 
-                                        BsonMapper.Global.Entity<Item>().Index<Item>(
-                                            "FullTextIndex",
-                                            item =>
-                                                $"{item.Album?.ToLower()} " +
-                                                $"{item.Author?.ToLower()} " +
-                                                $"{item.Creator?.ToLower()} " +
-                                                $"{item.Artist?.ToLower()} " +
-                                                $"{item.Title?.ToLower()} " +
-                                                $"{item.Genre?.ToLower()}");
-                                    }
+                                    BsonMapper.Global.Entity<Item>().Index<Item>(
+                                        "FullTextIndex",
+                                        item =>
+                                            $"{item.Album?.ToLower()} " +
+                                            $"{item.Author?.ToLower()} " +
+                                            $"{item.Creator?.ToLower()} " +
+                                            $"{item.Artist?.ToLower()} " +
+                                            $"{item.Title?.ToLower()} " +
+                                            $"{item.Genre?.ToLower()}");
                                 }
                                 finally
                                 {
@@ -96,25 +129,6 @@ namespace Symphonia
                 }
 
                 pdc.CloseAsync();
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var query = SearchQuery.Text.ToLower();
-
-            using (var db = new LiteDatabase(Settings.Default.DatabaseName))
-            {
-                var items = db.GetCollection<Item>();
-
-                var result = items.Find(Query.Contains("FullTextIndex", query));
-
-                var sb = new StringBuilder();
-
-                foreach (var item in result)
-                    sb.AppendLine(item.Title);
-
-                SearchResult.Text = sb.ToString();
             }
         }
 
